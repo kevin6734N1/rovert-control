@@ -1,0 +1,50 @@
+# ---------------------------------------------------------------------------
+# Herramientas locales (Android SDK, Gradle) — NO versionar: ocupan >1 GB
+# ---------------------------------------------------------------------------
+tools/
+.gradle/
+build/
+local.properties
+
+# ---------------------------------------------------------------------------
+# Android
+# ---------------------------------------------------------------------------
+android/.gradle/
+android/build/
+android/app/build/
+android/app/release/
+android/*.iml
+android/app/*.iml
+android/captures/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+
+# ---------------------------------------------------------------------------
+# Firmware / Arduino
+# ---------------------------------------------------------------------------
+firmware/**/build/
+firmware/**/*.elf
+firmware/**/*.bin
+firmware/**/*.hex
+
+# ---------------------------------------------------------------------------
+# Sistema operativo y editores
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.iml
+*.swp
+*~
+
+# ---------------------------------------------------------------------------
+# Artefactos generados
+# ---------------------------------------------------------------------------
+dist/*.apk
+dist/*.log
+docs-assets/*.png
+!docs-assets/.gitkeep
