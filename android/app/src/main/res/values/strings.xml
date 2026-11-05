@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rovert Control</string>
+
+    <!-- Estado de conexión -->
+    <string name="status_connected">Conectado</string>
+    <string name="status_connecting">Conectando…</string>
+    <string name="status_disconnected">Sin conexión</string>
+    <string name="status_error">Error de conexión</string>
+
+    <!-- Barra de estado -->
+    <string name="label_fps">FPS</string>
+    <string name="label_rover">Rover</string>
+    <string name="rover_stopped">Detenido</string>
+    <string name="rover_driving">En marcha</string>
+    <string name="label_uptime">Actividad</string>
+    <string name="label_command">Orden</string>
+    <string name="command_forward">Adelante</string>
+    <string name="command_backward">Retroceso</string>
+    <string name="command_left">Giro izquierda</string>
+    <string name="command_right">Giro derecha</string>
+    <string name="command_stop">Parado</string>
+    <string name="command_none">Sin orden</string>
+
+    <!-- Modo de control -->
+    <string name="mode_tactile">TÁCTIL</string>
+    <string name="mode_gamepad">MANDO</string>
+    <string name="mode_tactile_desc">Control táctil activo</string>
+    <string name="mode_gamepad_desc">Control por mando activo</string>
+
+    <!-- Controles -->
+    <string name="action_stop">STOP</string>
+    <string name="action_stop_desc">Parada de emergencia: detiene los motores al instante</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="action_connect">Conectar</string>
+    <string name="action_disconnect">Desconectar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_close">Cerrar</string>
+
+    <string name="dpad_up">Adelante</string>
+    <string name="dpad_down">Retroceso</string>
+    <string name="dpad_left">Girar a la izquierda</string>
+    <string name="dpad_right">Girar a la derecha</string>
+    <string name="dpad_hint">Mantén pulsado para mover el rover. Al soltar, se detiene.</string>
+
+    <!-- Vídeo -->
+    <string name="video_connecting">Conectando con la cámara…</string>
+    <string name="video_no_stream">Sin señal de vídeo</string>
+    <string name="video_error">Error de vídeo: %1$s</string>
+    <string name="video_retry">Reintentar</string>
+
+    <!-- Mando -->
+    <string name="gamepad_connected">Mando: %1$s</string>
+    <string name="gamepad_disconnected">Mando: ninguno</string>
+    <string name="gamepad_capture">Captura de eventos del mando</string>
+    <string name="gamepad_hint">Empareja el mando en Ajustes de Android.</string>
+
+    <!-- Ajustes -->
+    <string name="settings_title">Ajustes del rover</string>
+    <string name="settings_host">IP del rover</string>
+    <string name="settings_port">Puerto</string>
+    <string name="settings_ssid">Red Wi-Fi del rover</string>
+    <string name="settings_ssid_hint">Conéctate a esta red (SSID) antes de controlar.</string>
+    <string name="settings_speed">Velocidad máxima</string>
+    <string name="settings_speed_value">%1$d %%</string>
+    <string name="settings_left_polarity">Invertir motor izquierdo</string>
+    <string name="settings_right_polarity">Invertir motor derecho</string>
+    <string name="settings_dead_zone">Zona muerta del stick</string>
+    <string name="settings_dead_zone_value">%1$d %%</string>
+    <string name="settings_auto_connect">Conectar automáticamente al abrir</string>
+    <string name="settings_network_hint">El rover crea su propia red Wi-Fi. No necesitas Internet.</string>
+    <string name="settings_invalid_host">La IP del rover no es válida.</string>
+    <string name="settings_invalid_port">El puerto debe estar entre 1 y 65535.</string>
+
+    <!-- Errores -->
+    <string name="error_host_not_found">No se encuentra el rover. Conéctate a la Wi-Fi «%1$s» y vuelve a intentarlo.</string>
+    <string name="error_timeout">Tiempo de espera agotado. El rover no responde.</string>
+    <string name="error_connect">No se pudo conectar con el rover en %1$s:%2$d.</string>
+    <string name="error_network">Error de red al conectar con el rover.</string>
+    <string name="error_stream">No se pudo abrir el stream de vídeo.</string>
+    <string name="error_stream_closed">El stream de vídeo se cerró inesperadamente.</string>
+    <string name="error_generic">Ha ocurrido un error inesperado.</string>
+</resources>

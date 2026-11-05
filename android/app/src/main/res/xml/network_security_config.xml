@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  El rover se comunica por HTTP plano dentro de su propia red Wi-Fi SoftAP,
+  por lo que se permite el tráfico cleartext hacia cualquier host.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
