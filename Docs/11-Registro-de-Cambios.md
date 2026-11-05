@@ -75,6 +75,22 @@ que ya se hizo.
 - Control de la luz LED desde el software (la maneja el Arduino como faro).
 - Posicionamiento (odometría o GPS).
 
+### Nota de seguridad: token de Google Drive en este computador
+
+Para subir el APK a Google Drive se usó **rclone**, cuya página web de subida
+no es automatizable. El token de OAuth quedó guardado en:
+
+```
+C:\Users\kevin\Proyectos\Robert - ESP32 Cam\tools\rclone-config\rclone.conf
+```
+
+- Esa carpeta está en `.gitignore`: **el token nunca se sube a GitHub**.
+- El token concede acceso completo al Drive de la cuenta (ver, editar y borrar).
+- Para revocarlo: <https://myaccount.google.com/permissions> → busca "rclone" →
+  *Quitar acceso*. También puedes borrar el archivo `rclone.conf`.
+- El APK ya está publicado en GitHub Releases, así que el token **no hace falta**
+  para nada del proyecto.
+
 ---
 
 ## Problemas encontrados y cómo se resolvieron
