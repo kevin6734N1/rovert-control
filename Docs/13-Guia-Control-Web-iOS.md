@@ -1,5 +1,10 @@
 # 13 — Control desde iPhone, iPad o cualquier navegador
 
+> **¿Es tu primera vez con el rover?** Empieza por
+> **[`14-Guia-Rapida-Primera-Prueba.md`](14-Guia-Rapida-Primera-Prueba.md)**,
+> que lo explica todo en una sentada y en palabras simples. Este documento es
+> el detalle de la web app.
+
 > **Para quién es esta guía:** Fabián y Rodrigo (iPhone) y Kevin (iPad).
 > Si tienes Android, usa la app nativa: es más fluida. Esta guía es para quien
 > **no puede instalar el APK**.

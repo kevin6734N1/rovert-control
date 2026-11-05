@@ -57,6 +57,11 @@ la sesión. **Es condición para empezar la Sesión 1.**
 | 5 | Comprobar la **versión de iOS** (16.4+ si queréis mando) y tener un **cable USB de datos** a mano | 5 min | Cada uno por su lado |
 | 6 | **Instalar el driver CH340** (si tu placa lo lleva) y comprobar que el Arduino aparece como `COMx` en el Administrador de dispositivos | 10 min | Cada uno por su lado |
 | 7 | Leer los tres documentos clave: `Docs/03-Tabla-de-Conexiones-y-Cableado.md`, `Docs/06-Instrucciones-Flash-ESP32.md`, `Docs/07-Instrucciones-Flash-Arduino.md` | 30 min | Los dos |
+| 8 | Leer **`Docs/14-Guia-Rapida-Primera-Prueba.md`** (la guía corta, en palabras simples: qué se instala en el rover y cómo se conduce desde el iPhone) | 15 min | Los dos |
+
+> El documento 14 es **el primero que deben leer**, antes que el 03. Es el
+> resumen de todo lo demás y el que resume el proceso completo de principio a
+> fin.
 
 > Si alguien llega a la Sesión 1 sin la tarea previa hecha, pierde la primera
 > parte de la sesión. **Avisa el día antes.**

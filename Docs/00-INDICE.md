@@ -21,11 +21,14 @@
 
 ### Tengo iPhone o iPad (no puedo instalar el APK)
 
-1. **[13 — Control desde iPhone, iPad o cualquier navegador](13-Guia-Control-Web-iOS.md)**
+1. **[14 — Guía rápida: cómo probar el rover](14-Guia-Rapida-Primera-Prueba.md)**
+   **Empieza por aquí.** Todo el proceso en palabras simples: cargar los dos
+   programas en el rover (una vez, por USB) y luego conducirlo desde el móvil.
+2. **[13 — Control desde iPhone, iPad o cualquier navegador](13-Guia-Control-Web-iOS.md)**
    Conéctate al Wi-Fi `Rovert-Cam` y abre **`http://192.168.4.1`**. No hay que
    instalar nada: la propia ESP32 sirve la interfaz.
-2. **[09 — FAQ y problemas](09-FAQ-y-Problemas.md)** si algo no va.
-3. **[12 — Evaluación de iOS](12-Evaluacion-iOS.md)** para saber por qué se
+3. **[09 — FAQ y problemas](09-FAQ-y-Problemas.md)** si algo no va.
+4. **[12 — Evaluación de iOS](12-Evaluacion-iOS.md)** para saber por qué se
    eligió esta opción y no una app nativa.
 
 ### Quiero entender o modificar el proyecto
@@ -58,6 +61,7 @@
 | 11 | [Registro de cambios](11-Registro-de-Cambios.md) | Versiones, cambios y problemas resueltos |
 | 12 | [Evaluación de iOS](12-Evaluacion-iOS.md) | Comparación de rutas (PWA, KMP, SwiftUI, Flutter) y por qué se eligió la PWA |
 | 13 | [Control desde iPhone / iPad / navegador](13-Guia-Control-Web-iOS.md) | Guía paso a paso de la web app, ajustes, problemas y límites |
+| 14 | [**Guía rápida: cómo probar el rover**](14-Guia-Rapida-Primera-Prueba.md) | **Empezar en 20 minutos, en palabras simples. La primera guía que hay que leer** |
 
 ---
 

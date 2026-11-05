@@ -44,13 +44,17 @@ en cualquier teléfono (Android 7.0 o superior) sin necesidad de una tienda.
 
 ### Para los compañeros (Fabián y Rodrigo)
 
+> **Empieza aquí → [`Docs/14-Guia-Rapida-Primera-Prueba.md`](Docs/14-Guia-Rapida-Primera-Prueba.md)**
+> Guía de 20 minutos, en palabras simples: qué instalar (en el rover, por USB,
+> una sola vez) y cómo conducirlo desde el iPhone sin instalar nada.
+
 > **¿Tienes iPhone o iPad en vez de Android?** No hace falta instalar nada: la
 > ESP32 sirve su propia web app. Conéctate al Wi-Fi `Rovert-Cam` y abre
 > **`http://192.168.4.1`** en el navegador. Guía completa:
 > **[`Docs/13-Guia-Control-Web-iOS.md`](Docs/13-Guia-Control-Web-iOS.md)**.
 
-1. Lee **[`Docs/02-Guia-de-Instalacion-APK.md`](Docs/02-Guia-de-Instalacion-APK.md)**
-   para instalar la app en el teléfono.
+1. Lee **[`Docs/14-Guia-Rapida-Primera-Prueba.md`](Docs/14-Guia-Rapida-Primera-Prueba.md)**
+   (la guía corta, para empezar).
 2. Sigue **[`Docs/03-Tabla-de-Conexiones-y-Cableado.md`](Docs/03-Tabla-de-Conexiones-y-Cableado.md)**
    para cablear el rover.
 3. Graba los firmwares con
@@ -113,6 +117,7 @@ powershell -ExecutionPolicy Bypass -File tools/build-firmware.ps1
 | [`Docs/11-Registro-de-Cambios.md`](Docs/11-Registro-de-Cambios.md) | Historial de versiones |
 | [`Docs/12-Evaluacion-iOS.md`](Docs/12-Evaluacion-iOS.md) | Por qué se eligió la web app en vez de una app nativa para iOS |
 | [`Docs/13-Guia-Control-Web-iOS.md`](Docs/13-Guia-Control-Web-iOS.md) | **Control desde iPhone / iPad / navegador** |
+| [`Docs/14-Guia-Rapida-Primera-Prueba.md`](Docs/14-Guia-Rapida-Primera-Prueba.md) | **Guía rápida en palabras simples: cómo probar el rover** |
 
 ---
 
