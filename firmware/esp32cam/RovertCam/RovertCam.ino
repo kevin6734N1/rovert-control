@@ -12,6 +12,8 @@
  *   3. Sirve un WebSocket de control en               ws://192.168.4.1/control
  *   4. Traduce las órdenes de la app a tramas UART para el Arduino UNO
  *   5. Envía telemetría y estado de vuelta a la app
+ *   6. Sirve su propia web app en  http://192.168.4.1/  (control desde
+ *      iPhone / iPad / navegador, sin instalar nada — ver Docs/13)
  *
  *  PROTOCOLO (fuente de verdad: Docs/04-Protocolo-Comandos.md)
  * -----------------------------------------------------------
@@ -45,9 +47,10 @@
 #include <WiFi.h>
 #include <esp_camera.h>
 #include <ESPAsyncWebServer.h>
-#include <ESPAsyncTCP.h>
+#include <AsyncTCP.h>
 
 #include "config.h"
+#include "webapp_generated.h"
 
 // ---------------------------------------------------------------------------
 //  OBJETOS GLOBALES
@@ -214,7 +217,7 @@ static void onWebSocketEvent(AsyncWebSocket *srv, AsyncWebSocketClient *client,
       cmdLeft = 0.0f;
       cmdRight = 0.0f;
       lastCommandMs = millis();
-      Serial.printf("[ROVERT] Cliente WebSocket conectado (id %u)\n", client->id());
+      Serial.printf("[ROVERT] Cliente WebSocket conectado (id %lu)\n", (unsigned long)client->id());
       broadcastStatus();
       break;
     }
@@ -224,14 +227,34 @@ static void onWebSocketEvent(AsyncWebSocket *srv, AsyncWebSocketClient *client,
       break;
     }
     case WS_EVT_DATA: {
-      AwsWebSocketMessage *msg = (AwsWebSocketMessage *)arg;
-      if (msg && msg->data && msg->len > 0) {
-        // Se copia a un buffer local y se corta en '\0' para poder usar strstr.
-        char buf[256];
-        size_t n = msg->len < sizeof(buf) - 1 ? msg->len : sizeof(buf) - 1;
-        memcpy(buf, msg->data, n);
-        buf[n] = '\0';
-        handleControlMessage(buf);
+      // En ESPAsyncWebServer 3.12.x el puntero 'arg' es un AwsFrameInfo* con
+      // los datos del fragmento recibido (en las versiones anteriores era un
+      // AwsWebSocketMessage*).
+      AwsFrameInfo *info = (AwsFrameInfo *)arg;
+      if (!info || !data || len == 0) break;
+
+      // Las órdenes de la app son mensajes cortos que llegan en un único
+      // fragmento. Aun así, se acumula el buffer por si alguna vez vinieran
+      // troceados.
+      static char msgBuf[512];
+      static size_t msgLen = 0;
+
+      if (info->index == 0) msgLen = 0;
+
+      if (msgLen + len >= sizeof(msgBuf)) {
+        msgLen = 0;   // mensaje demasiado largo: se descarta entero
+        break;
+      }
+      memcpy(msgBuf + msgLen, data, len);
+      msgLen += len;
+
+      bool mensajeCompleto = info->final && info->index == 0 && info->len == len;
+      bool finDeFragmentos  = info->final && msgLen == info->len;
+
+      if (mensajeCompleto || finDeFragmentos) {
+        msgBuf[msgLen] = '\0';
+        handleControlMessage(msgBuf);
+        msgLen = 0;
       }
       break;
     }
@@ -383,10 +406,38 @@ void setup() {
   ws.onEvent(onWebSocketEvent);
   server.addHandler(&ws);
 
+  // --- Web app (control desde iPhone / iPad / navegador) -------------------
+  //  La ESP32 sirve su propia interfaz web. Así los compañeros que tienen iOS
+  //  pueden controlar el rover SIN instalar nada: solo tienen que abrir
+  //  http://192.168.4.1/ en el navegador del móvil (ver Docs/13).
+  server.on(ROVERT_WEBAPP_INDEX_PATH, HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncWebServerResponse *response = request->beginResponse(
+        200, "text/html",
+        (const uint8_t *)WEBAPP_INDEX_HTML, WEBAPP_INDEX_HTML_LEN);
+    response->addHeader("Cache-Control", "no-store");
+    request->send(response);
+  });
+
+  server.on(ROVERT_WEBAPP_CSS_PATH, HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncWebServerResponse *response = request->beginResponse(
+        200, "text/css",
+        (const uint8_t *)WEBAPP_APP_CSS, WEBAPP_APP_CSS_LEN);
+    response->addHeader("Cache-Control", "no-store");
+    request->send(response);
+  });
+
+  server.on(ROVERT_WEBAPP_JS_PATH, HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncWebServerResponse *response = request->beginResponse(
+        200, "application/javascript; charset=utf-8",
+        (const uint8_t *)WEBAPP_APP_JS, WEBAPP_APP_JS_LEN);
+    response->addHeader("Cache-Control", "no-store");
+    request->send(response);
+  });
+
   // --- Diagnóstico ---------------------------------------------------------
   server.on(ROVERT_INFO_PATH, HTTP_GET, [](AsyncWebServerRequest *request) {
     char json[420];
-    int n = snprintf(json, sizeof(json),
+    snprintf(json, sizeof(json),
         "{\"device\":\"Rovert ESP32-CAM\",\"fw\":\"1.0.0\",\"ssid\":\"%s\","
         "\"ip\":\"%s\",\"camera\":%s,\"clients\":%u,\"uptimeMs\":%lu,"
         "\"state\":\"%s\",\"left\":%.3f,\"right\":%.3f}",
@@ -401,7 +452,7 @@ void setup() {
   // --- Estado --------------------------------------------------------------
   server.on(ROVERT_STATUS_PATH, HTTP_GET, [](AsyncWebServerRequest *request) {
     char json[200];
-    int n = snprintf(json, sizeof(json),
+    snprintf(json, sizeof(json),
         "{\"type\":\"status\",\"state\":\"%s\",\"left\":%.3f,\"right\":%.3f,\"seq\":%lu,\"uptimeMs\":%lu}",
         (cmdLeft != 0.0f || cmdRight != 0.0f) ? "driving" : "stopped",
         cmdLeft, cmdRight, (unsigned long)cmdSeq, (unsigned long)millis());
@@ -416,7 +467,11 @@ void setup() {
       return;
     }
     AsyncWebServerResponse *response =
-        request->beginResponse_P(200, "image/jpeg", (const uint8_t *)fb->buf, fb->len);
+        request->beginResponse(200, "image/jpeg", (const uint8_t *)fb->buf, fb->len);
+    // Sin caché: la web app hace polling de /capture y no debe recibir
+    // fotogramas viejos del búfer del navegador.
+    response->addHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    response->addHeader("Pragma", "no-cache");
     request->send(response);
     esp_camera_fb_return(fb);
   });

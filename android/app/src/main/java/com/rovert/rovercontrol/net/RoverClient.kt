@@ -267,12 +267,15 @@ class RoverClient(
     // ---------------------------------------------------------------------
 
     /**
-     * Descarga el JSON de diagnóstico del endpoint `/`.
+     * Descarga el JSON de diagnóstico del endpoint `/info`.
+     *
+     * OJO: la raíz `/` la ocupa la web app (control desde navegador), por eso
+     * el diagnóstico vive en `/info`. Ver `Docs/04-Protocolo-Comandos.md`.
      */
     suspend fun fetchDiagnostic(): Result<String> = withContext(Dispatchers.IO) {
         runCatching {
             val settings = settingsProvider().sanitized()
-            val request = Request.Builder().url("${settings.httpBaseUrl}/").build()
+            val request = Request.Builder().url("${settings.httpBaseUrl}/info").build()
             httpClient.newCall(request).execute().use { response ->
                 response.body?.string().orEmpty()
             }

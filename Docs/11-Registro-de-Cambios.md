@@ -6,6 +6,78 @@ que ya se hizo.
 
 ---
 
+## v1.1.0 — 2026-11-04 — Web app para iPhone / iPad
+
+> **Motivo:** Fabián y Rodrigo tienen iOS, no Android. Se evaluaron cuatro rutas
+> (PWA, Kotlin Multiplatform, SwiftUI, Flutter) y se eligió la **PWA servida por
+> la propia ESP32**: es la única que no exige Mac, ni Xcode, ni 99 USD/año de
+> cuenta de Apple Developer. Argumentación completa con fuentes en
+> [`12-Evaluacion-iOS.md`](12-Evaluacion-iOS.md).
+
+### Añadido
+
+**Web app (`firmware/esp32cam/webapp/`)**
+- Interfaz de control completa en HTML + CSS + JavaScript, sin dependencias
+  externas: cruceta táctil, botón de `STOP`, indicador de conexión, contador de
+  FPS, panel de ajustes y soporte de mando por la Gamepad API del navegador.
+- **El mismo protocolo** que la app Android (`Docs/04`): `drive`, `stop` y `ping`
+  por `ws://192.168.4.1/control`. No hay un "modo iOS" ni ramas especiales.
+- El vídeo se obtiene **sondeando `GET /capture`** y pintándolo en un `<canvas>`
+  (~10 FPS), en vez de por `multipart/x-mixed-replace`, porque Safari falla con
+  `fetch()` + `response.body.getReader()` sobre ese tipo de respuesta
+  ("TypeError: Load failed").
+- Generador `build-webapp.js` que incrusta los tres archivos en la flash como
+  literales `PROGMEM` (31.726 bytes) en `RovertCam/webapp_generated.h`. El `.h`
+  va versionado, así que no hace falta Node.js para compilar el firmware.
+- Simulador sin dependencias `tools/mock-rover-server.js` para probar la web app
+  en un navegador de escritorio sin tener la ESP32 delante.
+
+**Firmware ESP32-CAM**
+- Tres rutas nuevas: `GET /` (HTML), `GET /app.css` y `GET /app.js`, servidas con
+  `Cache-Control: no-store`.
+- `GET /capture` ahora manda `Cache-Control: no-store` y `Pragma: no-cache`,
+  para que el navegador no reutilice fotogramas viejos durante el sondeo.
+
+**Documentación**
+- `Docs/12-Evaluacion-iOS.md`: comparación de las cuatro rutas para iOS con
+  fuentes citadas.
+- `Docs/13-Guia-Control-Web-iOS.md`: guía paso a paso para iPhone/iPad, ajustes,
+  problemas frecuentes y límites.
+
+**Herramientas**
+- `tools/build-firmware.ps1`: compila los dos firmwares con `arduino-cli`
+  (ESP32 con PSRAM y 8 MB de flash; UNO con `arduino:avr`).
+
+### Cambiado
+
+- **El diagnóstico JSON se movió de `GET /` a `GET /info`**, porque la raíz `/`
+  pasa a servir la web app.
+- `RoverClient.fetchDiagnostic()` (app Android) ahora pide `/info`.
+- `config.h`: `ROVERT_INFO_PATH` = `"/info"`; se añaden
+  `ROVERT_WEBAPP_INDEX_PATH`, `ROVERT_WEBAPP_CSS_PATH` y `ROVERT_WEBAPP_JS_PATH`.
+
+### Sin cambios (compatibilidad garantizada)
+
+- El **protocolo**, los **pines**, el **watchdog** y el firmware del **Arduino UNO**
+  son idénticos a la v1.0.0.
+- La app Android conserva su comportamiento; los **38 tests unitarios** siguen en
+  verde y el lint no reporta errores.
+- El APK se vuelve a publicar con el mismo `applicationId`, así que se
+  **actualiza encima** de la v1.0.0 sin desinstalar nada.
+
+### Pendiente / no verificado
+
+- **No hay hardware en el taller de pruebas**: ni la ESP32-CAM ni el Arduino UNO
+  se han grabado ni ejecutado. El firmware está escrito y **compilado**, pero no
+  ha corrido en la placa.
+- El comportamiento de **Safari en iOS 26** (aviso de "conexión no segura") y el
+  rendimiento del sondeo de `/capture` **no se han podido verificar en un iPhone
+  real**: es el punto nº 1 de la lista de pruebas de `Docs/10`.
+- El **Gamepad API en Safari** requiere **iOS 16.4+**; por debajo, la web app
+  funciona solo con los botones táctiles.
+
+---
+
 ## v1.0.0 — 2026-11-04 — Versión inicial completa
 
 ### Añadido
@@ -37,6 +109,7 @@ que ya se hizo.
 - SoftAP `Rovert-Cam` (contraseña `rovert2026`) en `192.168.4.1`.
 - Endpoint `GET /stream` (MJPEG por `multipart/x-mixed-replace`), `GET /capture`
   (JPEG suelto), `GET /status` y `GET /` (diagnóstico JSON).
+  *(En la v1.1.0 el diagnóstico pasa a `GET /info`.)*
 - WebSocket `/control` con mensajes `drive`, `stop` y `ping`, y difusión de
   `status`/`pong` hacia la app.
 - Puente UART2 (GPIO32 TX / GPIO33 RX, 38400 8N1) hacia el Arduino UNO.
@@ -52,7 +125,7 @@ que ya se hizo.
 - Telemetría `R,...` cada 100 ms y LED frontal en D2 (faro + parpadeo al mover).
 
 **Librerías vendorizadas (`firmware/esp32cam/libraries/`)**
-- `ESPAsyncWebServer` 3.6.0 (mathieucarbou) y `ESPAsyncTCP` 2.0.0 (esphome),
+- `ESP Async WebServer` 3.12.1 y `Async TCP` 3.5.0 (ESP32Async / Espressif),
   incluidas para que los compañeros no tengan que instalarlas a mano.
 
 **Documentación (`Docs/`)**

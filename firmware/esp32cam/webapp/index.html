@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d1117">
+<title>Rovert Control</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ======================= CABECERA ======================= -->
+<header class="barra">
+  <div class="barra-izq">
+    <span id="luz" class="luz luz--off" aria-hidden="true"></span>
+    <span id="estado" class="estado">Conectando…</span>
+  </div>
+  <div class="barra-der">
+    <span id="fps" class="fps">-- fps</span>
+    <button id="btn-ajustes" class="icono" aria-label="Ajustes">⚙</button>
+  </div>
+</header>
+
+<!-- ======================= VÍDEO ======================= -->
+<section class="video-caja">
+  <canvas id="lienzo" width="640" height="480"></canvas>
+  <div id="video-msg" class="video-msg">Esperando cámara…</div>
+</section>
+
+<!-- ======================= ESTADO ======================= -->
+<section class="estado-rover">
+  <div class="celda">
+    <span class="celda-titulo">Rover</span>
+    <span id="estado-rover" class="celda-valor">—</span>
+  </div>
+  <div class="celda">
+    <span class="celda-titulo">Modo</span>
+    <span id="modo" class="celda-valor">TÁCTIL</span>
+  </div>
+  <div class="celda">
+    <span class="celda-titulo">Izq / Der</span>
+    <span id="consigna" class="celda-valor">0 / 0</span>
+  </div>
+</section>
+
+<!-- ======================= CONTROL ======================= -->
+<main class="control">
+  <div class="cruceta" role="group" aria-label="Control de movimiento">
+    <button class="boton boton--cruceta boton--arriba"    data-dir="up"    aria-label="Adelante">▲</button>
+    <button class="boton boton--cruceta boton--izquierda" data-dir="left"  aria-label="Izquierda">◀</button>
+    <button class="boton boton--centro" id="btn-stop" aria-label="Parar">■</button>
+    <button class="boton boton--cruceta boton--derecha"  data-dir="right" aria-label="Derecha">▶</button>
+    <button class="boton boton--cruceta boton--abajo"    data-dir="down"  aria-label="Atrás">▼</button>
+  </div>
+
+  <button id="btn-mando" class="mando-chip" aria-pressed="false">
+    <span id="mando-nombre">Mando: no conectado</span>
+  </button>
+</main>
+
+<!-- ======================= AJUSTES ======================= -->
+<aside id="ajustes" class="ajustes" hidden>
+  <div class="ajustes-cabecera">
+    <h2>Ajustes</h2>
+    <button id="btn-cerrar-ajustes" class="icono" aria-label="Cerrar">✕</button>
+  </div>
+
+  <label class="campo">
+    <span>Servidor del rover</span>
+    <input id="cfg-host" type="text" inputmode="url" placeholder="192.168.4.1" autocomplete="off">
+    <small>Por defecto se usa la dirección desde la que se abrió esta página.</small>
+  </label>
+
+  <label class="campo">
+    <span>Puerto</span>
+    <input id="cfg-puerto" type="number" min="0" max="65535" inputmode="numeric" placeholder="80">
+    <small>Deja <b>0</b> para usar el mismo puerto que esta página (lo normal: 80 en el rover).</small>
+  </label>
+
+  <label class="campo">
+    <span>Velocidad máxima: <b id="lbl-velocidad">100 %</b></span>
+    <input id="cfg-velocidad" type="range" min="10" max="100" step="5" value="100">
+  </label>
+
+  <label class="campo">
+    <span>Polaridad motor izquierdo</span>
+    <select id="cfg-sign-izq">
+      <option value="1">Normal (+ = adelante)</option>
+      <option value="-1">Invertida</option>
+    </select>
+  </label>
+
+  <label class="campo">
+    <span>Polaridad motor derecho</span>
+    <select id="cfg-sign-der">
+      <option value="1">Normal (+ = adelante)</option>
+      <option value="-1">Invertida</option>
+    </select>
+  </label>
+
+  <label class="campo">
+    <span>Zona muerta del stick: <b id="lbl-zona">0.18</b></span>
+    <input id="cfg-zona" type="range" min="0" max="40" step="1" value="18">
+  </label>
+
+  <label class="campo">
+    <span>Fotogramas por segundo del vídeo: <b id="lbl-fps">10</b></span>
+    <input id="cfg-fps" type="range" min="2" max="20" step="1" value="10">
+  </label>
+
+  <div class="ajustes-acciones">
+    <button id="btn-reconectar" class="boton boton--normal">Reconectar</button>
+    <button id="btn-resetear" class="boton boton--normal boton--gris">Restablecer</button>
+  </div>
+
+  <p class="nota" id="nota-info"></p>
+</aside>
+
+<script src="app.js"></script>
+</body>
+</html>

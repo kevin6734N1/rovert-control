@@ -19,6 +19,15 @@
    La lista que hay que ir marcando delante del profesor.
 5. **[09 — FAQ y problemas](09-FAQ-y-Problemas.md)** cuando algo no vaya bien.
 
+### Tengo iPhone o iPad (no puedo instalar el APK)
+
+1. **[13 — Control desde iPhone, iPad o cualquier navegador](13-Guia-Control-Web-iOS.md)**
+   Conéctate al Wi-Fi `Rovert-Cam` y abre **`http://192.168.4.1`**. No hay que
+   instalar nada: la propia ESP32 sirve la interfaz.
+2. **[09 — FAQ y problemas](09-FAQ-y-Problemas.md)** si algo no va.
+3. **[12 — Evaluación de iOS](12-Evaluacion-iOS.md)** para saber por qué se
+   eligió esta opción y no una app nativa.
+
 ### Quiero entender o modificar el proyecto
 
 | Documento | Contenido |
@@ -26,6 +35,7 @@
 | **[01 — Arquitectura y decisiones de diseño](01-Arquitectura-y-Decisiones.md)** | Por qué se eligió cada cosa y qué alternativas se descartaron |
 | **[04 — Protocolo de comandos](04-Protocolo-Comandos.md)** | **Contrato** entre app, ESP32 y Arduino. Si lo cambias, cámbialo en los tres lados |
 | **[05 — Protocolo UART ESP32–Arduino](05-Protocolo-UART-ESP32-Arduino.md)** | Tramas, watchdog y diagramas de tiempos |
+| **[13 — Control desde iPhone / iPad / navegador](13-Guia-Control-Web-iOS.md)** | Cómo se usa la web app y dónde está su código fuente |
 | **[11 — Registro de cambios](11-Registro-de-Cambios.md)** | Historial de versiones y qué se rompió/arregló |
 
 ---
@@ -46,6 +56,8 @@
 | 09 | [FAQ y problemas](09-FAQ-y-Problemas.md) | Symptoma → causa → solución |
 | 10 | [Plan de pruebas para Fabián y Rodrigo](10-Plan-de-Pruebas-Fabian-Rodrigo.md) | Plan de dos sesiones, responsabilidades, riesgos |
 | 11 | [Registro de cambios](11-Registro-de-Cambios.md) | Versiones, cambios y problemas resueltos |
+| 12 | [Evaluación de iOS](12-Evaluacion-iOS.md) | Comparación de rutas (PWA, KMP, SwiftUI, Flutter) y por qué se eligió la PWA |
+| 13 | [Control desde iPhone / iPad / navegador](13-Guia-Control-Web-iOS.md) | Guía paso a paso de la web app, ajustes, problemas y límites |
 
 ---
 
@@ -54,6 +66,8 @@
 - **SSID del rover:** `Rovert-Cam` — contraseña: `rovert2026`
 - **IP del rover:** `192.168.4.1`
 - **Puerto HTTP/WebSocket:** `80`
+- **Web app (iPhone/iPad/navegador):** `http://192.168.4.1/` — la sirve la propia
+  ESP32. Código en `firmware/esp32cam/webapp/`.
 - **Enlace con el Arduino:** UART 38400 8N1
 - Todos los textos de la app están en **español**, igual que esta documentación.
 - Cuando un documento menciona un pin, **siempre** se refiere a la placa

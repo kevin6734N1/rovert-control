@@ -1,0 +1,285 @@
+/* ==========================================================================
+   Rovert Control — hoja de estilos de la web app
+   Diseño "móvil primero": la pantalla es de un teléfono en vertical.
+   ========================================================================== */
+
+:root {
+  --fondo: #0d1117;
+  --panel: #161b22;
+  --panel-2: #1c2330;
+  --borde: #2b3441;
+  --texto: #e6edf3;
+  --tenue: #8b949e;
+  --verde: #2ea043;
+  --rojo: #da3633;
+  --ambar: #d29922;
+  --acento: #1f6feb;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ------------------------------ Cabecera ------------------------------ */
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--borde);
+}
+
+.barra-izq, .barra-der { display: flex; align-items: center; gap: 8px; }
+
+.luz {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--tenue);
+  box-shadow: 0 0 0 3px rgba(139,148,158,.15);
+  flex: 0 0 auto;
+}
+.luz--on   { background: var(--verde); box-shadow: 0 0 0 3px rgba(46,160,67,.20); }
+.luz--warn { background: var(--ambar); box-shadow: 0 0 0 3px rgba(210,153,34,.20); }
+.luz--err  { background: var(--rojo);   box-shadow: 0 0 0 3px rgba(218,54,51,.20); }
+
+.estado { font-size: 13px; font-weight: 600; }
+.fps { font-size: 12px; color: var(--tenue); font-variant-numeric: tabular-nums; }
+
+.icono {
+  background: transparent;
+  border: 1px solid var(--borde);
+  color: var(--texto);
+  border-radius: 8px;
+  width: 34px; height: 34px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.icono:active { background: var(--panel-2); }
+
+/* ------------------------------ Vídeo ------------------------------ */
+.video-caja {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  overflow: hidden;
+  border-bottom: 1px solid var(--borde);
+}
+
+.video-caja canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.video-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tenue);
+  font-size: 14px;
+  background: rgba(13,17,23,.75);
+  text-align: center;
+  padding: 16px;
+  pointer-events: none;
+}
+.video-msg[hidden] { display: none; }
+
+/* ------------------------------ Estado ------------------------------ */
+.estado-rover {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--panel);
+  border-bottom: 1px solid var(--borde);
+}
+
+.celda {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-right: 1px solid var(--borde);
+  min-width: 0;
+}
+.celda:last-child { border-right: none; }
+
+.celda-titulo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--tenue);
+}
+.celda-valor {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.celda-valor.moviendo { color: var(--ambar); }
+.celda-valor.parado   { color: var(--verde); }
+
+/* ------------------------------ Control ------------------------------ */
+.control {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 20px 16px;
+}
+
+.cruceta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  width: min(78vw, 320px);
+  aspect-ratio: 1 / 1;
+}
+
+.boton {
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  background: var(--panel-2);
+  color: var(--texto);
+  font-size: 26px;
+  cursor: pointer;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .08s linear, transform .08s linear;
+}
+.boton:active { transform: scale(.96); }
+.boton.activo { background: var(--acento); border-color: var(--acento); }
+
+.boton--cruceta   { background: var(--panel-2); }
+.boton--arriba    { grid-area: 1 / 2; }
+.boton--izquierda { grid-area: 2 / 1; }
+.boton--centro    { grid-area: 2 / 2; background: var(--rojo); border-color: var(--rojo); font-size: 24px; }
+.boton--centro:active { background: #b62324; }
+.boton--derecha   { grid-area: 2 / 3; }
+.boton--abajo     { grid-area: 3 / 2; }
+
+.mando-chip {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background: var(--panel);
+  color: var(--tenue);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mando-chip.conectado { color: var(--verde); border-color: rgba(46,160,67,.45); }
+
+/* ------------------------------ Ajustes ------------------------------ */
+.ajustes {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: var(--fondo);
+  padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.ajustes[hidden] { display: none; }
+
+.ajustes-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.ajustes-cabecera h2 { margin: 0; font-size: 18px; }
+
+.campo {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--tenue);
+}
+.campo > span { display: block; margin-bottom: 6px; color: var(--texto); font-weight: 600; }
+.campo b { color: var(--acento); font-variant-numeric: tabular-nums; }
+.campo small { display: block; margin-top: 5px; font-size: 11px; line-height: 1.4; }
+
+.campo input[type="text"],
+.campo input[type="number"],
+.campo select {
+  width: 100%;
+  padding: 11px 12px;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  color: var(--texto);
+  font-size: 16px; /* evita el zoom automático en iOS */
+  font-family: inherit;
+}
+
+.campo input[type="range"] {
+  width: 100%;
+  accent-color: var(--acento);
+  height: 32px;
+}
+
+.ajustes-acciones { display: flex; gap: 10px; margin-top: 6px; }
+
+.boton--normal {
+  flex: 1;
+  padding: 13px 10px;
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--acento);
+  border-color: var(--acento);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.boton--gris { background: var(--panel-2); border-color: var(--borde); color: var(--texto); }
+
+.nota {
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  color: var(--tenue);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.nota:empty { display: none; }
+
+@media (min-height: 780px) {
+  .control { gap: 26px; }
+  .cruceta { width: min(72vw, 360px); }
+}

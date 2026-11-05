@@ -6,6 +6,16 @@
 > (Fabián, Rodrigo): sigue los pasos en orden y no hace falta saber nada
 > especial de Android.
 
+> ### ⚠️ ¿Tienes iPhone o iPad? Esta guía no es para ti
+>
+> El APK es **solo para Android**. Con iOS no se puede instalar, pero **no hace
+> falta**: la ESP32 sirve su propia interfaz web. Conéctate al Wi-Fi `Rovert-Cam`
+> y abre **`http://192.168.4.1`** en el navegador del móvil.
+> Guía: **[13 — Control desde iPhone, iPad o cualquier navegador](13-Guia-Control-Web-iOS.md)**.
+>
+> En el iPhone/iPad es **imprescindible apagar los datos móviles** antes de
+> abrir la página, o iOS sacará el móvil de la red del rover.
+
 ---
 
 ## 1. Qué necesitas

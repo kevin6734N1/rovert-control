@@ -14,8 +14,10 @@ Este plan **da por hecho** lo siguiente. Si alguno no se cumple, dilo en la
 primera sesión: el plan hay que ajustarlo, no improvisarlo.
 
 1. **Cada uno tiene su propio material**, no comparten rover:
-   - un **teléfono Android** (versión 7.0 o superior) con la app instalada y el
-     permiso de "Instalar apps desconocidas" activado;
+   - un **iPhone o iPad** (iOS 16.4 o superior si queréis usar el mando DualShock 4;
+     con iOS anterior, la web app funciona igual pero **solo con los botones
+     táctiles**). El control se hace con el **navegador**: no hay nada que
+     instalar, se abre `http://192.168.4.1` (ver `Docs/13`);
    - el **chasis del rover ya montado** con sus ruedas (o con las piezas para
      montarlo);
    - **un L298N**;
@@ -35,6 +37,9 @@ primera sesión: el plan hay que ajustarlo, no improvisarlo.
    verificar.
 6. Las sesiones duran **4 horas** cada una, con un descanso de 15 minutos. Si
    vuestras sesiones son más cortas, aplicad el plan B del §8.
+7. **Antes de la Sesión 1, apagad los datos móviles** en el iPhone/iPad y
+   comprobad que os conectáis a `Rovert-Cam`. Es el ajuste que más problemas
+   causa si se deja para el día de la prueba.
 
 ---
 
@@ -47,9 +52,9 @@ la sesión. **Es condición para empezar la Sesión 1.**
 |---|---|---|---|
 | 1 | Instalar **Arduino IDE 2.x** | 10 min | Cada uno por su lado |
 | 2 | Instalar el **core de Espressif** (URL: `https://espressif.github.io/arduino-esp32/package_esp32_index.json`, versión 3.x estable) | 20–40 min (descarga de ~300 MB) | Cada uno por su lado |
-| 3 | Copiar las **dos librerías** `ESPAsyncWebServer` y `ESPAsyncTCP` de `firmware/esp32cam/libraries/` a `C:\Users\<usuario>\Documents\Arduino\libraries` | 10 min | Cada uno por su lado |
-| 4 | **Instalar el APK** en el móvil y activar "Instalar apps desconocidas" | 10 min | Cada uno por su lado |
-| 5 | Comprobar la **versión de Android** (≥ 7.0) y tener un **cable USB de datos** a mano | 5 min | Cada uno por su lado |
+| 3 | Copiar las **dos librerías** `ESP_Async_WebServer` (3.12.1) y `Async_TCP` (3.5.0) de `firmware/esp32cam/libraries/` a `C:\Users\<usuario>\Documents\Arduino\libraries` | 10 min | Cada uno por su lado |
+| 4 | **Probar la web app en el móvil**: **apagar los datos móviles**, conectarse al Wi-Fi `Rovert-Cam` y abrir `http://192.168.4.1` en Safari. Debe verse la interfaz con el vídeo (guía: `Docs/13`) | 15 min | Cada uno por su lado |
+| 5 | Comprobar la **versión de iOS** (16.4+ si queréis mando) y tener un **cable USB de datos** a mano | 5 min | Cada uno por su lado |
 | 6 | **Instalar el driver CH340** (si tu placa lo lleva) y comprobar que el Arduino aparece como `COMx` en el Administrador de dispositivos | 10 min | Cada uno por su lado |
 | 7 | Leer los tres documentos clave: `Docs/03-Tabla-de-Conexiones-y-Cableado.md`, `Docs/06-Instrucciones-Flash-ESP32.md`, `Docs/07-Instrucciones-Flash-Arduino.md` | 30 min | Los dos |
 
@@ -108,8 +113,8 @@ la sesión. **Es condición para empezar la Sesión 1.**
 | 2:20–2:35 | **Descanso** | — | — | — |
 | 2:35–3:00 | **Prueba del enlace UART** | Mira las tramas `R,…` en el Monitor Serie del Arduino mientras la app manda órdenes | Igual | Se ven tramas `R,<izq>,<der>,<seq>` con valores coherentes |
 | 3:00–3:10 | **Prueba del watchdog** | Con el rover en marcha, desconecta el cable D9/D10 y cronometra la parada | Repite la prueba en su kit | Los motores paran en **menos de 400 ms** en los dos kits |
-| 3:10–3:40 | **Pruebas de la app** | Conecta el móvil a `Rovert-Cam`, abre la app, prueba vídeo, D-pad, STOP y mando | Igual | App *Conectado*, vídeo visible, rover obedece y el STOP lo para en el acto |
-| 3:40–4:00 | **Pruebas de aceptación y acta** | Ejecuta y anota las RF-01…RF-25 de `Docs/08-Pruebas-de-Aceptacion.md` | Idem, cada uno las suyas | Las 25 pruebas de cada kit superadas o documentadas las incidencias |
+| 3:10–3:40 | **Pruebas de control (web app)** | Con los datos móviles apagados, conéctate al Wi-Fi `Rovert-Cam`, abre `http://192.168.4.1` en Safari y prueba vídeo, cruceta, STOP y (si es iOS 16.4+) el mando | Igual | Web app *Conectado*, vídeo visible, rover obedece y el STOP lo para en el acto |
+| 3:40–4:00 | **Pruebas de aceptación y acta** | Ejecuta y anota las RF-01…RF-32 de `Docs/08-Pruebas-de-Aceptacion.md` (las RF-26…RF-32 son de la web app) | Idem, cada uno las suyas | Las 32 pruebas de cada kit superadas o documentadas las incidencias |
 
 ### Puerta de salida de la Sesión 2
 
@@ -117,7 +122,8 @@ la sesión. **Es condición para empezar la Sesión 1.**
 - [ ] Los dos rover se mueven, giran y se paran correctamente.
 - [ ] Las **pruebas de seguridad** (RF-18 desconexión, RF-19 segundo plano,
       RF-24 watchdog del Arduino) superadas en los dos kits.
-- [ ] La tabla RF-01…RF-25 rellena y firmada en los dos kits.
+- [ ] La tabla RF-01…RF-32 rellena y firmada en los dos kits
+      (RF-26…RF-32: web app en el móvil).
 - [ ] **Acta de la sesión** firmada por los dos (abajo).
 
 ---
@@ -126,7 +132,7 @@ la sesión. **Es condición para empezar la Sesión 1.**
 
 | Material | Fabián | Rodrigo |
 |---|---|---|
-| Teléfono Android (≥ 7.0) con la app instalada y permiso de "apps desconocidas" | ✔ | ✔ |
+| Teléfono o tablet iOS (iPhone/iPad) con **datos móviles apagados** y Safari. No hace falta instalar nada: la ESP32 sirve la web app en `http://192.168.4.1` | ✔ | ✔ |
 | Portátil con Arduino IDE 2.x, core esp32 3.x y las dos librerías instaladas (tarea previa) | ✔ | ✔ |
 | Chasis del rover con ruedas | ✔ | ✔ |
 | Módulo L298N (con sus jumpers) | ✔ | ✔ |

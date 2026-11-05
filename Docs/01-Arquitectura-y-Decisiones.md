@@ -282,7 +282,7 @@ Robert - ESP32 Cam/
 ├── firmware/
 │   ├── esp32cam/
 │   │   ├── RovertCam/         -> sketch principal (+ config.h)
-│   │   └── libraries/         -> ESPAsyncWebServer y ESPAsyncTCP
+│   │   └── libraries/         -> ESP_Async_WebServer y Async_TCP
 │   └── arduino_uno/
 │       └── MotorController/   -> sketch del UNO
 ├── dist/                      -> APK compilados

@@ -643,6 +643,57 @@ HTTP. En un par de segundos debería estar todo listo.
 
 ---
 
+## 23. La web app en iPhone / iPad no conecta
+
+**Síntoma.** Abres `http://192.168.4.1` en Safari y se queda en *"Conectando…"*,
+o la página ni siquiera carga.
+
+**Solución, en este orden:**
+
+1. **¿Estás conectado al Wi-Fi `Rovert-Cam`?** Es lo primero. Si no estás, la
+   página no puede encontrar al rover.
+2. **¿Has apagado los datos móviles?** Es la causa número uno. Con los datos
+   activos, iOS detecta que `Rovert-Cam` no tiene Internet y **te saca de esa
+   red** para pasarte a la de la operadora. Ajustes → Datos móviles → **Datos
+   móviles → Desactivado**.
+3. **Pulsa "Mantener conectado"** cuando iOS avise de que la red no tiene
+   Internet. Si eliges "Usar cellular", todo lo anterior pierde el sentido.
+4. **Recarga la página** (Safari → el botón ↻ de la barra de direcciones).
+
+Si la página carga pero **el vídeo va a trompicones**, baja el ajuste
+**"Fotogramas por segundo del vídeo"** a 5–6 en el panel ⚙.
+
+Si tienes **iOS 16.4 o superior**, el mando DualShock 4 se detecta solo por
+Bluetooth. Por debajo de esa versión, la web app funciona pero **solo con los
+botones táctiles**.
+
+La guía completa está en
+**[13 — Control desde iPhone, iPad o cualquier navegador](13-Guia-Control-Web-iOS.md)**.
+
+---
+
+## 24. ¿Dónde está la app para iOS? ¿Puedo instalarla?
+
+**No hay app nativa para iOS, y no hace falta.** La ESP32-CAM sirve su propia
+interfaz web en `http://192.168.4.1/`, así que desde cualquier navegador
+(iPhone, iPad, Android, PC) se controla el rover igual que desde la app.
+
+El porqué está argumentado con fuentes en
+**[12 — Evaluación de iOS](12-Evaluacion-iOS.md)**: publicar una app nativa
+para iOS exigiría un Mac con Xcode y una cuenta del Apple Developer Program
+(99 USD/año), y compilar Kotlin para iOS desde Windows no es posible.
+
+**Diferencias entre la app Android y la web app:**
+
+| | App Android | Web app |
+|---|---|---|
+| Vídeo | Stream continuo (~12 FPS) | Sondeo de fotogramas (~10 FPS) |
+| Instalación | Sí (APK) | No |
+| Mando | Sí, en cualquier Android 7+ | Sí, en iOS 16.4+ / navegadores modernos |
+| Ajustes de polaridad y velocidad | Sí | Sí |
+
+---
+
 ## Si nada de esto funciona
 
 1. **Vuelve al punto de partida conocido.** Flashea los dos firmwares otra vez

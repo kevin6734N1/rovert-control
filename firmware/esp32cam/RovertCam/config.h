@@ -94,7 +94,24 @@
 #define ROVERT_WS_PATH       "/control"
 #define ROVERT_STREAM_PATH   "/stream"
 #define ROVERT_STATUS_PATH   "/status"
-#define ROVERT_INFO_PATH     "/"
+
+//  Diagnóstico en JSON. OJO: "/" lo ocupa la web app (ver más abajo).
+#define ROVERT_INFO_PATH     "/info"
+
+// ---------------------------------------------------------------------------
+//  WEB APP (control desde iPhone / iPad / navegador)
+// ---------------------------------------------------------------------------
+//  La ESP32 sirve su propia interfaz web. Así los compañeros que tienen iOS
+//  pueden controlar el rover sin instalar nada: basta con abrir
+//  http://192.168.4.1/ en el navegador del móvil.
+//
+//  El contenido (index.html, app.css, app.js) va incrustado en la flash como
+//  literales PROGMEM; se genera con:
+//      node firmware/esp32cam/webapp/build-webapp.js
+// ---------------------------------------------------------------------------
+#define ROVERT_WEBAPP_INDEX_PATH "/"
+#define ROVERT_WEBAPP_CSS_PATH   "/app.css"
+#define ROVERT_WEBAPP_JS_PATH    "/app.js"
 
 // ---------------------------------------------------------------------------
 //  TIEMPOS / SEGURIDAD

@@ -23,14 +23,25 @@ pulsar "Mantener conectado". La app debe poder fijar la IP del rover desde ajust
 
 ---
 
-## 2. HTTP (ESP32-CAM → Android)
+## 2. HTTP (ESP32-CAM → Android / iPhone / iPad)
 
 | Endpoint | Método | Respuesta | Uso |
 |---|---|---|---|
-| `/` | GET | JSON de diagnóstico | Comprobación rápida de que el rover responde |
-| `/stream` | GET | `multipart/x-mixed-replace; boundary=frame` | Stream MJPEG de la OV2640 |
+| `/` | GET | HTML | **Web app** de control (página principal). La sirve la propia ESP32 |
+| `/app.css` | GET | CSS | Hoja de estilos de la web app |
+| `/app.js` | GET | JavaScript | Lógica de la web app |
+| `/info` | GET | JSON de diagnóstico | Comprobación rápida de que el rover responde |
+| `/stream` | GET | `multipart/x-mixed-replace; boundary=frame` | Stream MJPEG de la OV2640 (app Android) |
+| `/capture` | GET | `image/jpeg` | Fotograma suelto (la web app lo consulta por sondeo) |
 | `/status` | GET | JSON de estado | Estado de motores y uptime |
 | `/control` | WS | WebSocket | Canal de control bidireccional |
+
+> **Cambio en la v1.1.0:** el diagnóstico JSON se movió de `/` a **`/info`**, porque la raíz `/`
+> pasa a servir la web app (control desde navegador para iPhone/iPad). La app Android ahora
+> pide `/info` en `RoverClient.fetchDiagnostic()`. Todo lo demás no cambia.
+>
+> Los dos clientes (app Android y web app) hablan **exactamente el mismo protocolo** por
+> WebSocket: es el mismo `Docs/04`. La web app es un cliente más, no un cliente especial.
 
 ### 2.1 Formato del stream MJPEG
 

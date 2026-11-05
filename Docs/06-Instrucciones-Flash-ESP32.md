@@ -15,7 +15,7 @@
 | **Arduino IDE 2.x** | La versión estable 2.x (no el IDE clásico 1.8) |
 | **Cable micro-USB de DATOS** | Un cable solo de carga no sirve: no lleva líneas de datos |
 | Core **esp32 by Espressif Systems** 3.x | Se instala en el paso 2 |
-| Las 2 librerías del proyecto | `ESPAsyncWebServer` 3.6.0 y `ESPAsyncTCP` 2.0.0 (paso 3) |
+| Las 2 librerías del proyecto | `ESP Async WebServer` 3.12.1 y `Async TCP` 3.5.0, de ESP32Async (paso 3) |
 
 > **No uses** un cable USB que solo cargue. Es el error número 1: el IDE no ve
 > ningún puerto y no hay forma de flashear. Si tienes dudas, prueba con el cable
@@ -60,8 +60,21 @@ El sketch incluye dos cabeceras que **no** vienen con el core:
 
 ```cpp
 #include <ESPAsyncWebServer.h>   // servidor HTTP + WebSocket
-#include <ESPAsyncTCP.h>          // dependencia del anterior
+#include <AsyncTCP.h>             // dependencia del anterior
 ```
+
+> **Importante — versiones que funcionan con el core 3.x.** El par correcto es:
+>
+> | Librería | Versión | Autor | Cabecera que aporta |
+> |---|---|---|---|
+> | **ESP Async WebServer** | **3.12.1** | ESP32Async (Espressif) | `ESPAsyncWebServer.h` |
+> | **Async TCP** | **3.5.0** | ESP32Async (Espressif) | `AsyncTCP.h` |
+>
+> Las versiones antiguas (`ESPAsyncWebServer` 3.6.0 de mathieucarbou +
+> `ESPAsyncTCP` 2.0.0 de esphome) son del **core 2.x** y **no compilan** con
+> el core 3.x: fallan con `fatal error: AsyncTCP.h: No such file or directory`
+> y con `fatal error: debug.h: No such file or directory`. Si te pasa eso, es
+> que tienes las librerías equivocadas.
 
 Por eso el repositorio las trae **vendorizadas** en
 `firmware/esp32cam/libraries/`. Tienes dos formas de instalarlas.
@@ -78,8 +91,8 @@ Por eso el repositorio las trae **vendorizadas** en
 
    ```text
    libraries\
-   ├── ESPAsyncTCP\        (library.properties, src\, examples\, ...)
-   └── ESPAsyncWebServer\  (library.properties, src\, examples\, ...)
+   ├── Async_TCP\           (library.properties, src\, ...)
+   └── ESP_Async_WebServer\ (library.properties, src\, ...)
    ```
 
 3. Abre la carpeta de librerías del IDE (el *sketchbook*). En Windows es:
@@ -93,32 +106,38 @@ Por eso el repositorio las trae **vendorizadas** en
    - Si tienes la carpeta **Documentos** redirigida a OneDrive, la ruta real será
      `...\OneDrive\Documentos\Arduino\libraries`. Compruébalo en el Explorador
      de archivos antes de copiar.
-4. Copia **las dos carpetas completas** (`ESPAsyncTCP` y `ESPAsyncWebServer`)
+4. Copia **las dos carpetas completas** (`Async_TCP` y `ESP_Async_WebServer`)
    dentro de `...\Arduino\libraries`. El resultado debe quedar así:
 
    ```text
    C:\Users\<tu_usuario>\Documents\Arduino\libraries\
-   ├── ESPAsyncTCP\
-   └── ESPAsyncWebServer\
+   ├── Async_TCP\
+   └── ESP_Async_WebServer\
    ```
+
+   > Si ya las instalaste desde el **Library Manager** con esos mismos nombres,
+   > copiar encima simplemente las sobrescribe: no hay problema. Lo que **no**
+   > debe haber es una segunda copia con otro nombre (por ejemplo la antigua
+   > `ESPAsyncWebServer`), porque el IDE se quejaría de *"multiple libraries
+   > found"*.
 
 5. Reinicia el Arduino IDE.
 
 > Copia la **carpeta entera**, no el contenido suelto: la librería se reconoce
 > por su fichero `library.properties`, que está en la raíz de cada carpeta.
 
-### 3.2 Opción B — desde el Library Manager o desde un ZIP
+### 3.2 Opción B — desde el Library Manager
 
 Si prefieres no copiar a mano:
 
-- **Library Manager**: abre **Herramientas → Administrar bibliotecas**
-  (*Manage Libraries*), busca `ESPAsyncWebServer` (autor *Mathieu Carbou*,
-  versión **3.6.0**) e `ESPAsyncTCP` (autor *Hristo Gochkov*, versión **2.0.0**)
-  e instálalas con **Install**.
-- **Desde un ZIP**: comprime cada carpeta de
-  `firmware/esp32cam/libraries/` en un `.zip` (el ZIP debe contener la carpeta
-  `ESPAsyncWebServer/library.properties` en su interior, no los ficheros sueltos)
-  y usa **Sketch → Import Library → Add .ZIP Library**.
+- Abre **Herramientas → Administrar bibliotecas** (*Manage Libraries*).
+- Busca **`ESP Async WebServer`** — autor **ESP32Async** — versión **3.12.1**, e
+  instálala.
+- Busca **`Async TCP`** — autor **ESP32Async** — versión **3.5.0**, e instálala.
+
+> Estas son los mismas librerías que trae el repositorio, así que las dos
+> opciones son equivalentes. Lo importante es la **versión**: no instales las
+> antiguas 3.6.0 / 2.0.0, que son del core 2.x y no compilan con el core 3.x.
 
 > Si mezclas las dos opciones (una copiada y otra instalada), puede haber dos
 > versiones de la misma librería y el IDE se queja de "multiple libraries found".
@@ -162,22 +181,28 @@ aplica los menús uno a uno.
 | Parámetro | Valor que debes elegir | Menú en Arduino IDE 2.x |
 |---|---|---|
 | **Placa** | **ESP32 Wrover Module** (o *Freenove ESP32 WROVER CAM* si tu IDE lo muestra) | Herramientas → Placa |
-| **PSRAM** | **Enabled** | Herramientas → PSRAM |
-| **Esquema de partición** | **No OTA (2MB APP/2MB SPIFFS)** | Herramientas → Esquema de partición |
-| **Tamaño de flash** | **4MB** (la opción de 4 MB; el módulo WROVER tiene 4 MB) | Herramientas → Tamaño de flash |
+| **Esquema de partición** | **Huge APP (3MB No OTA/1MB SPIFFS)** | Herramientas → Esquema de partición |
 | **Velocidad de carga** | **115200** si el menú aparece (ver nota) | Herramientas → Velocidad de carga |
 | **Puerto** | El COM/TTY de la placa | Herramientas → Puerto |
 | **Frecuencia de CPU** | 240 MHz (valor por defecto) | Herramientas → Frecuencia de CPU |
 | **USB CDC On Boot** | Disabled (por defecto) | Herramientas → USB CDC On Boot |
 
+> Con la placa **ESP32 Wrover Module** el core ya deja fijados el **tamaño de
+> flash (4 MB)** y la **PSRAM**, así que **no aparecen** los menús *Tamaño de
+> flash* ni *PSRAM*: no hace falta tocarlos. Si tu IDE sí los muestra (IDE
+> antiguo o placa mal detectada), pon **4 MB** y **Enabled**.
+
 ### 5.1 Notas de la tabla
 
-- **PSRAM: Enabled.** Es obligatorio. Sin PSRAM detectada la cámara no puede
-  reservar los fotogramas JPEG y el firmware avisa con
+- **PSRAM.** Con la placa *ESP32 Wrover Module* viene activada por el propio
+  core. Es **imprescindible**: sin PSRAM detectada la cámara no puede reservar
+  los fotogramas JPEG y el firmware avisa con
   `[ROVERT] AVISO: no se detecta PSRAM, el stream MJPEG no funcionara bien`.
-- **Partición "No OTA (2MB APP/2MB SPIFFS)".** El esquema por defecto del core
-  está pensado para placas de 4 MB con OTA y deja poco espacio para la
-  aplicación. Con este esquema el sketch entra de sobra y **no** usas OTA.
+- **Partición "Huge APP (3MB No OTA/1MB SPIFFS)".** El esquema por defecto del
+  core para 4 MB es *Default 4MB with spiffs*, que deja solo **1,2 MB** para la
+  aplicación: el sketch ocupa ~1,1 MB, así que entraría **justo y sin margen**.
+  Con *Huge APP* hay 3 MB de aplicación y **no** usas OTA (que en un taller no
+  hace falta).
 - **Velocidad de carga.** En el ESP32 clásico (con puente USB-serie) el menú
   *Velocidad de carga* puede no aparecer: el core lo ofrece solo en las placas
   con USB nativo. **Si aparece, pon 115200**: es más lento pero mucho más
@@ -191,16 +216,31 @@ aplica los menús uno a uno.
 
 ```text
 1.  Herramientas → Placa → ESP32 Arduino Boards → ESP32 Wrover Module
-2.  Herramientas → PSRAM → Enabled
-3.  Herramientas → Esquema de partición → No OTA (2MB APP/2MB SPIFFS)
-4.  Herramientas → Tamaño de flash → 4MB
-5.  Herramientas → Puerto → COMx  (el de tu placa)
-6.  Herramientas → Verificar   (Ctrl+-)  → debe compilar sin errores
+2.  Herramientas → Esquema de partición → Huge APP (3MB No OTA/1MB SPIFFS)
+3.  Herramientas → Puerto → COMx  (el de tu placa)
+4.  Herramientas → Verificar   (Ctrl+-)  → debe compilar sin errores
 ```
 
-El paso 6 es importante: si el sketch compila y dice *"Compilación completada"*
-o *"Compilation complete"*, tienes las librerías y la placa bien configuradas.
-Solo entonces pasa a flashear.
+### 5.3 Alternativa: compilar desde la línea de comandos
+
+Si quieres saltarte el IDE, el repositorio trae un script que compila **los dos
+firmwares** con `arduino-cli` (instala él mismo el core esp32 3.x y el core
+`arduino:avr`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\build-firmware.ps1
+```
+
+Los binarios quedan en `tools\build\esp32\` (`RovertCam.ino.bin`) y
+`tools\build\uno\` (`MotorController.ino.hex`).
+
+> Con esta configuración (`esp32:esp32:esp32wrover:PartitionScheme=huge_app`)
+> el firmware compila **sin un solo aviso**: 1.095.104 bytes de programa (34 %
+> de 3 MB) y 58.956 bytes de RAM.
+
+El último paso (Verificar) es importante: si el sketch compila y dice
+*"Compilación completada"* o *"Compilation complete"*, tienes las librerías y la
+placa bien configuradas. Solo entonces pasa a flashear.
 
 ---
 
@@ -265,7 +305,6 @@ Qué significa cada línea:
 | `PSRAM detectada` | **Correcto**: la memoria PSRAM del WROVER está activa. Si sale el aviso de "no se detecta PSRAM", revisa Herramientas → PSRAM |
 | `Camara OV2640 inicializada OK` | La cámara arranca. Si sale `ERROR al iniciar la camara: 0x...`, los pines de la cámara no son los del WROVER |
 | `Servidor HTTP/WebSocket en marcha` | El rover ya responde en `http://192.168.4.1/` |
-
 Líneas adicionales cuando la app se conecta:
 
 ```text
@@ -287,8 +326,29 @@ Con el móvil (o el portátil) conectado a la red `Rovert-Cam`, abre:
 http://192.168.4.1/
 ```
 
-Debe devolver un JSON de diagnóstico. Y en `http://192.168.4.1/stream` se ve el
-vídeo de la cámara en cualquier navegador.
+Debe abrirse la **web app de control** (la cruceta y el vídeo). Ese mismo
+enlace es el que usan Fabián y Rodrigo desde sus iPhones, sin instalar nada
+(guía completa en `Docs/13-Guia-Control-Web-iOS.md`).
+
+Y para el **diagnóstico en JSON**:
+
+```text
+http://192.168.4.1/info
+```
+
+Debe devolver algo así:
+
+```json
+{"device":"Rovert ESP32-CAM","fw":"1.0.0","ssid":"Rovert-Cam",
+ "ip":"192.168.4.1","camera":true,"clients":1,"uptimeMs":12345,
+ "state":"stopped","left":0.000,"right":0.000}
+```
+
+> Ojo: el diagnóstico **ya no está en `/`**. La raíz `/` la ocupa ahora la web
+> app, así que `/` devuelve HTML y el JSON está en **`/info`**.
+
+En `http://192.168.4.1/stream` se ve el vídeo de la cámara en cualquier
+navegador (es el stream MJPEG que usa la app Android).
 
 ---
 
@@ -301,6 +361,7 @@ vídeo de la cámara en cualquier navegador.
 | **`A fatal error occurred: Failed to connect to ESP32: Timed out waiting for packet header`** | La placa no entró en modo bootloader | Repite la secuencia manual de botones. Mantén BOOT **hasta** que el IDE muestre *"Connecting…"* |
 | **`Invalid head of packet`** | Velocidad de carga demasiado alta | Pon Herramientas → Velocidad de carga = **115200** y vuelve a subir |
 | **`fatal error: ESPAsyncWebServer.h: No such file or directory`** | Las librerías no están instaladas | Copia las dos carpetas a `...\Documents\Arduino\libraries` (§3.1) y reinicia el IDE |
+| **`fatal error: AsyncTCP.h: No such file or directory`** o **`fatal error: debug.h: No such file or directory`** | Librerías de la versión antigua (core 2.x) mezcladas con las nuevas | Borra las librerías antiguas (`ESPAsyncTCP`, `ESPAsyncWebServer`) de `...\Arduino\libraries` y copia las del repositorio: `Async_TCP` 3.5.0 y `ESP_Async_WebServer` 3.12.1 (§3) |
 | **La placa se reinicia en bucle** (`Brownout detector was triggered`) | Alimentación insuficiente: el pack no da los 1 A de pico | Usa un convertidor buck/boost de 5 V **≥ 1 A**, revisa que los conectores no estén flojos y que la batería tenga carga. Ver la entrada 12 de `Docs/09-FAQ-y-Problemas.md` |
 | **`[ROVERT] ERROR al iniciar la camara: 0x...`** | Pines de cámara incorrectos (casi siempre: valores de AI-Thinker) | No toques `config.h`: la tabla de la WROVER ya es correcta. Comprueba que `CAM_PIN_*` sigue como en el repositorio y que la placa es una WROVER, no una AI-Thinker |
 | **`[ROVERT] AVISO: no se detecta PSRAM`** | PSRAM desactivado en el IDE o sketch mal compilado | Herramientas → PSRAM → **Enabled**, y comprueba que has seleccionado **ESP32 Wrover Module** (no *ESP32 Dev Module*) |
