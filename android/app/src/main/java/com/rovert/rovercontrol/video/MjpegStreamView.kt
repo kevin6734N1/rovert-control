@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import com.rovert.rovercontrol.R
 import okhttp3.Response
 import java.util.concurrent.TimeUnit
 
@@ -139,12 +140,12 @@ class MjpegStreamView @JvmOverloads constructor(
             call = newCall
             newCall.execute().use { response ->
                 if (!response.isSuccessful) {
-                    fail("El stream de vídeo respondió con el código ${response.code}.")
+                    fail(context.getString(R.string.error_video_code, response.code))
                     return
                 }
                 val body = response.body
                 if (body == null) {
-                    fail("El rover no devolvió imagen.")
+                    fail(context.getString(R.string.error_video_empty))
                     return
                 }
                 val boundary = parseBoundary(response.header("Content-Type"))
@@ -153,7 +154,7 @@ class MjpegStreamView @JvmOverloads constructor(
                 }
             }
             if (running.get()) {
-                fail("El stream de vídeo se cerró inesperadamente.")
+                fail(context.getString(R.string.error_stream_closed))
             }
         } catch (e: Exception) {
             if (running.get()) {
@@ -219,11 +220,11 @@ class MjpegStreamView @JvmOverloads constructor(
     }
 
     private fun friendlyStreamError(e: Exception): String = when (e) {
-        is java.net.UnknownHostException -> "No se encuentra el rover en la red."
-        is java.net.SocketTimeoutException -> "El rover no responde al stream de vídeo."
-        is java.net.ConnectException -> "No se pudo abrir el stream de vídeo del rover."
-        is java.io.IOException -> "Error de red en el stream de vídeo."
-        else -> "No se pudo reproducir el stream de vídeo."
+        is java.net.UnknownHostException -> context.getString(R.string.error_video_host)
+        is java.net.SocketTimeoutException -> context.getString(R.string.error_video_timeout)
+        is java.net.ConnectException -> context.getString(R.string.error_video_connect)
+        is java.io.IOException -> context.getString(R.string.error_video_network)
+        else -> context.getString(R.string.error_video_generic)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -233,9 +234,9 @@ class MjpegStreamView @JvmOverloads constructor(
         val current = frame
         if (current == null || current.isRecycled) {
             val message = when (val s = _state.value) {
-                is MjpegState.CONNECTING -> "Conectando con la cámara…"
+                is MjpegState.CONNECTING -> context.getString(R.string.video_connecting)
                 is MjpegState.ERROR -> s.message
-                else -> "Sin señal de vídeo"
+                else -> context.getString(R.string.video_no_stream)
             }
             canvas.drawText(
                 message,
@@ -306,6 +307,14 @@ internal class MjpegParser(boundary: String) {
 
     private enum class Phase { BOUNDARY, HEADERS, BODY, TRAILER }
 
+    private companion object {
+        /** Código ASCII de CR. */
+        const val CR = 13
+
+        /** Código ASCII de LF. */
+        const val LF = 10
+    }
+
     /**
      * Introduce nuevos bytes en el parser y devuelve los fotogramas completos.
      */
@@ -335,7 +344,10 @@ internal class MjpegParser(boundary: String) {
                         headers.append(block).append("\r\n")
                         contentLength = parseContentLength(headers.toString())
                         buffer.consume(index + headerEnd.size)
-                        phase = if (contentLength > 0) Phase.BODY else Phase.BOUNDARY
+                        // Sin Content-Length el fotograma termina en la
+                        // siguiente boundary, así que también se pasa por la
+                        // fase de cuerpo (que sabe resolver ese caso).
+                        phase = Phase.BODY
                         progressed = true
                     }
                 }
@@ -352,8 +364,17 @@ internal class MjpegParser(boundary: String) {
                         // siguiente boundary.
                         val index = buffer.indexOf(boundaryBytes)
                         if (index >= 0) {
-                            if (index > 0) {
-                                frames.add(buffer.read(index))
+                            var frameEnd = index
+                            // El CRLF anterior a la boundary pertenece al
+                            // delimitador, no al fotograma.
+                            if (frameEnd >= 2 &&
+                                buffer.byteAt(frameEnd - 1) == LF &&
+                                buffer.byteAt(frameEnd - 2) == CR
+                            ) {
+                                frameEnd -= 2
+                            }
+                            if (frameEnd > 0) {
+                                frames.add(buffer.read(frameEnd))
                             }
                             phase = Phase.TRAILER
                             progressed = true
@@ -400,6 +421,11 @@ internal class StreamBuffer {
     private var size = 0
 
     fun available(): Int = size
+
+    /**
+     * Byte en la posición indicada, sin signo.
+     */
+    fun byteAt(index: Int): Int = data[index].toInt() and 0xFF
 
     fun append(source: ByteArray, length: Int) {
         if (length <= 0) return

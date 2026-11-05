@@ -118,11 +118,17 @@ Esto evita reprogramar el firmware cada vez que se invierte un motor en el talle
 
 ## 4. UART ESP32 ↔ Arduino UNO
 
-- Velocidad: **115200 baud**, 8 bits de datos, 1 bit de parada, sin paridad (8N1).
+- Velocidad: **38400 baud**, 8 bits de datos, 1 bit de parada, sin paridad (8N1).
 - TX de la ESP32 → RX del Arduino (nivel 3,3 V, directo).
 - TX del Arduino → RX de la ESP32 (**5 V → necesita adaptación de nivel**).
 - GND común obligatorio.
 - Toda trama termina en `\n` (LF). CR también se acepta y se descarta.
+
+> **No confundir con el puerto USB.** El monitor serie del Arduino IDE y el de
+> la ESP32 usan **115200 baud** (es el puerto de depuración por USB). El
+> **enlace entre la ESP32 y el Arduino usa 38400 baud**, porque el Arduino UNO
+> lo hace por software (`SoftwareSerial`) en D10/D9 para no ocupar el USB.
+> Los detalles están en `Docs/05-Protocolo-UART-ESP32-Arduino.md`.
 
 ### 4.1 ESP32 → Arduino
 

@@ -81,7 +81,7 @@ object ProtocolCodec {
             return null
         }
 
-        return when (val type = json.optString("type", "").lowercase()) {
+        return when (json.optString("type", "").lowercase()) {
             TYPE_STATUS -> DeviceMessage.Status(
                 RoverStatus(
                     state = json.optString("state", RoverStatus.STATE_STOPPED),

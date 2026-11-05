@@ -30,6 +30,16 @@ directo, con mando DualShock 4 opcional.
 
 ## Inicio rápido
 
+### Dónde descargar el APK
+
+| Canal | Enlace |
+|---|---|
+| **GitHub Releases** (recomendado) | <https://github.com/kevin6734N1/rovert-control/releases/tag/v1.0.0> → *Assets* → `Rovert-Control-v1.0.0.apk` |
+| **Google Drive** (carpeta *Taller de Robótica*) | <https://drive.google.com/open?id=1bEzPmtJGLL9wSy7pMydhVEz8jJ0VDAkB> |
+
+El APK está firmado con la clave de depuración, así que se instala directamente
+en cualquier teléfono (Android 7.0 o superior) sin necesidad de una tienda.
+
 ### Para los compañeros (Fabián y Rodrigo)
 
 1. Lee **[`Docs/02-Guia-de-Instalacion-APK.md`](Docs/02-Guia-de-Instalacion-APK.md)**

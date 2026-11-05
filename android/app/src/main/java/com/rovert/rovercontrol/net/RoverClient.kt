@@ -3,6 +3,7 @@ package com.rovert.rovercontrol.net
 import com.rovert.rovercontrol.model.ConnectionState
 import com.rovert.rovercontrol.model.ControlMessage
 import com.rovert.rovercontrol.model.DeviceMessage
+import com.rovert.rovercontrol.model.RoverError
 import com.rovert.rovercontrol.model.RoverSettings
 import com.rovert.rovercontrol.model.RoverStatus
 import com.rovert.rovercontrol.protocol.MotorMapping
@@ -18,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -84,15 +84,20 @@ class RoverClient(
     private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
     val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
-    private val _lastError = MutableStateFlow<String?>(null)
+    private val _lastError = MutableStateFlow<RoverError?>(null)
 
-    /** Último error legible (español) de conexión. */
-    val lastError: StateFlow<String?> = _lastError.asStateFlow()
+    /** Último error de conexión; el texto lo pone la interfaz. */
+    val lastError: StateFlow<RoverError?> = _lastError.asStateFlow()
 
     private val _status = MutableStateFlow<RoverStatus?>(null)
 
-    /** Telegría del rover (`status`) o `null` si aún no se ha recibido ninguna. */
-    val status: Flow<RoverStatus?> = _status.asStateFlow()
+    /**
+     * Telegría del rover (`status`) o `null` si aún no se ha recibido ninguna.
+     *
+     * Es un [StateFlow] (y por tanto un `Flow`) para que la interfaz pueda
+     * recogerlo sin necesidad de un valor inicial.
+     */
+    val status: StateFlow<RoverStatus?> = _status.asStateFlow()
 
     private val _seq = AtomicInteger(1)
 
@@ -136,7 +141,7 @@ class RoverClient(
         } catch (e: IllegalArgumentException) {
             webSocket = null
             _connectionState.value = ConnectionState.ERROR
-            _lastError.value = e.message
+            _lastError.value = RoverError.UNKNOWN
             scheduleReconnect()
         }
     }
@@ -229,7 +234,7 @@ class RoverClient(
             // considera detenido (contrato §5.4).
             webSocket = null
             _connectionState.value = ConnectionState.ERROR
-            _lastError.value = "No se pudo enviar la orden al rover."
+            _lastError.value = RoverError.SEND_FAILED
         }
     }
 
@@ -241,7 +246,7 @@ class RoverClient(
         if (!sent) {
             webSocket = null
             _connectionState.value = ConnectionState.ERROR
-            _lastError.value = "No se pudo enviar la orden al rover."
+            _lastError.value = RoverError.SEND_FAILED
             scheduleReconnect()
         }
     }
@@ -292,27 +297,15 @@ class RoverClient(
     }
 
     /**
-     * Traduce una excepción de red a un mensaje comprensible en español.
+     * Traduce una excepción de red al error que la interfaz mostrará.
      */
-    fun friendlyError(throwable: Throwable?): String {
-        val settings = settingsProvider().sanitized()
-        return when (throwable) {
-            is UnknownHostException ->
-                "No se encuentra el rover. Conéctate a la Wi-Fi «${settings.ssidHint}» y vuelve a intentarlo."
-
-            is SocketTimeoutException ->
-                "Tiempo de espera agotado. El rover no responde."
-
-            is ConnectException ->
-                "No se pudo conectar con el rover en ${settings.host}:${settings.port}."
-
-            is IOException ->
-                "Error de red al conectar con el rover."
-
-            null -> "No se pudo conectar con el rover."
-
-            else -> throwable.message ?: "No se pudo conectar con el rover."
-        }
+    fun errorFor(throwable: Throwable?): RoverError = when (throwable) {
+        is UnknownHostException -> RoverError.HOST_NOT_FOUND
+        is SocketTimeoutException -> RoverError.TIMEOUT
+        is ConnectException -> RoverError.CONNECT_FAILED
+        is IOException -> RoverError.NETWORK
+        null -> RoverError.UNKNOWN
+        else -> RoverError.UNKNOWN
     }
 
     // ---------------------------------------------------------------------
@@ -358,7 +351,7 @@ class RoverClient(
             this@RoverClient.webSocket = null
             heartbeatJob?.cancel()
             _connectionState.value = ConnectionState.ERROR
-            _lastError.value = friendlyError(t)
+            _lastError.value = errorFor(t)
             // El rover deja de mover los motores al caer el WebSocket, pero se
             // intenta igualmente enviar `stop` antes de dar la conexión por
             // perdida.

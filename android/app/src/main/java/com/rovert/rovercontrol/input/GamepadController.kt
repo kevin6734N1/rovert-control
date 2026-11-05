@@ -98,6 +98,17 @@ class GamepadController(private val scope: CoroutineScope) {
     }
 
     /**
+     * Descarta los valores de ejes y botones memorizados.
+     *
+     * Se usa al pasar la app a segundo plano: el rover se detiene y no se
+     * retoma el movimiento con un mando que siguiera pulsado desde antes.
+     */
+    fun resetAxes() {
+        _axes.value = GamepadAxes()
+        _pressedButtons.value = emptySet()
+    }
+
+    /**
      * Comprueba los dispositivos de entrada y actualiza el estado del mando.
      */
     fun refreshDevices() {

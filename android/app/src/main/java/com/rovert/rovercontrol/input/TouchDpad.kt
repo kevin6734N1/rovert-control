@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -85,7 +85,7 @@ fun TouchDpad(
         ) {
             DpadButton(
                 command = DriveCommand.LEFT,
-                icon = Icons.Filled.KeyboardArrowLeft,
+                icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 description = stringResource(R.string.dpad_left),
                 size = buttonSize,
                 enabled = enabled,
@@ -108,7 +108,7 @@ fun TouchDpad(
             }
             DpadButton(
                 command = DriveCommand.RIGHT,
-                icon = Icons.Filled.KeyboardArrowRight,
+                icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 description = stringResource(R.string.dpad_right),
                 size = buttonSize,
                 enabled = enabled,
@@ -139,6 +139,7 @@ fun TouchDpad(
 /**
  * Botón individual de la cruceta con pulsación sostenida.
  */
+@Suppress("DEPRECATION") // `consume()` es la API disponible en Compose 1.6.
 @Composable
 private fun DpadButton(
     command: DriveCommand,
@@ -185,6 +186,9 @@ private fun DpadButton(
             )
             .pointerInput(command, enabled) {
                 if (!enabled) return@pointerInput
+                // Tamaño real del botón (IntSize) para detectar si el puntero
+                // sale del control.
+                val hitArea = this.size
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
                     pressed = true
@@ -197,8 +201,11 @@ private fun DpadButton(
                             // Puntero liberado, cancelado o fuera del control:
                             // en cualquier caso hay que parar.
                             if (change == null || !change.pressed) break
-                            if (!bounds.contains(change.position)) break
-                            change.consumePositionChange()
+                            val position = change.position
+                            val inside = position.x >= 0f && position.y >= 0f &&
+                                position.x <= hitArea.width && position.y <= hitArea.height
+                            if (!inside) break
+                            change.consume()
                         }
                     } finally {
                         pressed = false

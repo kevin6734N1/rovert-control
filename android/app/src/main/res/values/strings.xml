@@ -36,7 +36,6 @@
     <string name="action_disconnect">Desconectar</string>
     <string name="action_save">Guardar</string>
     <string name="action_cancel">Cancelar</string>
-    <string name="action_close">Cerrar</string>
 
     <string name="dpad_up">Adelante</string>
     <string name="dpad_down">Retroceso</string>
@@ -54,7 +53,6 @@
     <string name="gamepad_connected">Mando: %1$s</string>
     <string name="gamepad_disconnected">Mando: ninguno</string>
     <string name="gamepad_capture">Captura de eventos del mando</string>
-    <string name="gamepad_hint">Empareja el mando en Ajustes de Android.</string>
 
     <!-- Ajustes -->
     <string name="settings_title">Ajustes del rover</string>
@@ -73,12 +71,21 @@
     <string name="settings_invalid_host">La IP del rover no es válida.</string>
     <string name="settings_invalid_port">El puerto debe estar entre 1 y 65535.</string>
 
-    <!-- Errores -->
+    <!-- Errores de conexión -->
     <string name="error_host_not_found">No se encuentra el rover. Conéctate a la Wi-Fi «%1$s» y vuelve a intentarlo.</string>
     <string name="error_timeout">Tiempo de espera agotado. El rover no responde.</string>
     <string name="error_connect">No se pudo conectar con el rover en %1$s:%2$d.</string>
     <string name="error_network">Error de red al conectar con el rover.</string>
-    <string name="error_stream">No se pudo abrir el stream de vídeo.</string>
-    <string name="error_stream_closed">El stream de vídeo se cerró inesperadamente.</string>
+    <string name="error_send_failed">No se pudo enviar la orden al rover.</string>
     <string name="error_generic">Ha ocurrido un error inesperado.</string>
+
+    <!-- Errores de vídeo -->
+    <string name="error_video_host">No se encuentra el rover en la red.</string>
+    <string name="error_video_timeout">El rover no responde al stream de vídeo.</string>
+    <string name="error_video_connect">No se pudo abrir el stream de vídeo del rover.</string>
+    <string name="error_video_network">Error de red en el stream de vídeo.</string>
+    <string name="error_video_generic">No se pudo reproducir el stream de vídeo.</string>
+    <string name="error_video_code">El stream de vídeo respondió con el código %1$d.</string>
+    <string name="error_video_empty">El rover no devolvió imagen.</string>
+    <string name="error_stream_closed">El stream de vídeo se cerró inesperadamente.</string>
 </resources>

@@ -103,7 +103,7 @@ necesita nada: 3,3 V es un HIGH válido para el ATmega328P (su Vih es 0,6·Vcc
 ≈ 3 V a 5 V).
 
 **Alternativa descartada.** Módulo "level shifter" de 4 canales: un módulo
-bidireccional con MOSFET更适合 I2C y es más caro que dos resistencias de
+bidireccional con MOSFET está pensado para I2C y cuesta más caro que dos resistencias de
 0,1 USD.
 
 ### 2.5 `SoftwareSerial` en lugar del UART de hardware del UNO
@@ -247,7 +247,7 @@ arranque de la placa es seguro.
   solo, bien mantenido y con soporte de `Multipart`.
 - El parser del MJPEG se implementa a mano (~120 líneas) porque el
   `MultipartReader` de OkHttp no está pensado para un flujo infinito de
-  imágenes y añadir una librería de vídeo completa sería报告会.
+  imágenes y añadir una librería de vídeo completa sería.
 - Menos dependencias = APK más pequeño y menos riesgo de que a los compañeros
   les falle la instalación.
 
