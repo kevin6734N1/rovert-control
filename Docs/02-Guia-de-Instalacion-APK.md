@@ -23,7 +23,7 @@
 | Elemento | Detalle |
 |---|---|
 | Teléfono Android | Versión **7.0 (Nougat) o superior** |
-| APK de la app | `Rovert-Control-v1.0.0.apk` (unos pocos MB) |
+| APK de la app | `Rovert-Control-v1.1.0.apk` (unos pocos MB) |
 | Red Wi-Fi | La que crea el rover: **`Rovert-Cam`** / contraseña **`rovert2026`** |
 | Mando (opcional) | Un **DualShock 4** (PS4) emparejado **con el teléfono**, no con el rover |
 | Conexión a Internet | Solo para **descargar** el APK. Para usar el rover **no** hace falta |
@@ -41,7 +41,7 @@
    **`https://github.com/kevin6734N1/rovert-control`**
 3. Ve a la pestaña **Releases** (es la segunda, a la derecha de *Code*).
 4. Baja hasta el bloque de la última versión publicada y descarga el fichero
-   **`Rovert-Control-v1.0.0.apk`**.
+   **`Rovert-Control-v1.1.0.apk`**.
    - Si el botón dice *Source code (zip)* en lugar de *Assets*, estás en la
      lista de commits: sube a la pestaña **Releases**.
 5. Android te preguntará si quieres abrir el fichero con el instalador de apps.
@@ -56,7 +56,7 @@
 El APK también está subido a la carpeta de Google Drive del proyecto
 (**Taller de Robótica**), por si el acceso a GitHub desde el móvil da problemas:
 
-**`https://drive.google.com/open?id=1bEzPmtJGLL9wSy7pMydhVEz8jJ0VDAkB`**
+**`https://drive.google.com/open?id=1BBlXwDj4oHAsFZU2aPtT6vck1MF5QKRM`**
 
 Ábrelo en el navegador del móvil, pulsa el botón de descarga y acepta el
 "instalar apps desconocidas" que pido Android.
@@ -115,7 +115,7 @@ APK (el navegador o el explorador de archivos).
 
 1. Abre la carpeta **Descargas** del teléfono (en Samsung: *Mis archivos →
    Descargas*).
-2. Toca el fichero **`Rovert-Control-v1.0.0.apk`**.
+2. Toca el fichero **`Rovert-Control-v1.1.0.apk`**.
    - Si lo descargaste con el navegador, ábrelo desde la notificación de
      descarga o desde **Chrome → ⋮ → Descargas**.
 3. Android muestra el aviso de seguridad:

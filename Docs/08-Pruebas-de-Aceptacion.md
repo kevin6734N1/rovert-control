@@ -48,7 +48,7 @@ Para comprobar que el rover se detiene en menos de 400 ms:
 
 | ID | Requisito | Cómo se prueba | Resultado esperado | ✓/✗ | Firma |
 |---|---|---|---|---|---|
-| **RF-01** | La app se instala en el teléfono | Descargar `Rovert-Control-v1.0.0.apk`, permitir "Instalar apps desconocidas" e instalarlo | La instalación termina sin errores y aparece el icono **Rovert Control** en el cajón de apps | | |
+| **RF-01** | La app se instala en el teléfono | Descargar `Rovert-Control-v1.1.0.apk`, permitir "Instalar apps desconocidas" e instalarlo | La instalación termina sin errores y aparece el icono **Rovert Control** en el cajón de apps | | |
 | **RF-02** | La app se abre y no se cierra sola | Abrir la app y dejarla en pantalla 2 minutos | Permanece abierta, sin cierres inesperados | | |
 | **RF-03** | El móvil se conecta a la red del rover | Ajustes → Wi-Fi → elegir `Rovert-Cam` con la contraseña `rovert2026` | El móvil se conecta; Android avisa de "sin Internet" y se elige **Mantener conectado** | | |
 | **RF-04** | La app conecta con el rover | Abrir la app con el rover encendido | La barra superior pasa a **Conectado** | | |
@@ -101,6 +101,13 @@ demás.
 > Si en el taller se usa Android, se pueden dejar sin ejecutar; si se usa iOS,
 > son **obligatorias**: sin ellas, la web app no está verificada en el
 > dispositivo real.
+>
+> Al revés también: **RF-01 a RF-04 y RF-15 a RF-17** (instalar la app, usarla
+> y emparejar el mando desde Android) **solo aplican si hay un teléfono
+> Android**. Con iOS no se ejecutan: el equivalente es la web app.
+>
+> Lo que **nunca** se deja sin ejecutar, en ninguna plataforma, son las de
+> seguridad: **RF-18**, **RF-19** y **RF-24**.
 
 ### Registro de incidencias
 
